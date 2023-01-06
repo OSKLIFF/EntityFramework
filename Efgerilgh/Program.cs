@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +15,14 @@ namespace Efgerilgh
     {
         static void Main(string[] args)
         {
-            LinkStart:
-            string good;
-            Console.Write("Введите название товара: ");
-            good = Console.ReadLine();
-            foreach (var item in GetValuesEf())
-                if (item.Name == good)
-                    Console.WriteLine(string.Join(" ",item.Name,item.Nums));
-            goto LinkStart;
+            JsonFile();
+        }
+
+        public static void JsonFile()
+        {
+            if (!File.Exists(Path.GetTempPath() + "data"))
+                File.Create(Path.GetTempPath() + "data").Close();
+            File.WriteAllText(Path.GetTempPath() + "data", JsonConvert.SerializeObject(GetValuesEf()));
         }
 
         public static List<SeverData> GetValuesEf()
